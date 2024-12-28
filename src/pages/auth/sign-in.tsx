@@ -34,12 +34,14 @@ export function SignIn() {
       <div className="p-6">
         <div className="w-[562.88px] rounded-[32px] bg-white px-[80px] py-[60.8px]">
           <div className="pb-[130.88px]">
-            <h1 className="font-secondary text-2xl font-bold text-[#1D1D1D]">
-              Acesse sua conta
-            </h1>
-            <span className="font-primary text-sm text-[#666666]">
-              Informe seu e-mail e senha para entrar
-            </span>
+            <div className="mb-10">
+              <h1 className="font-secondary text-2xl font-bold text-[#1D1D1D]">
+                Acesse sua conta
+              </h1>
+              <span className="font-primary text-sm text-[#666666]">
+                Informe seu e-mail e senha para entrar
+              </span>
+            </div>
 
             <form
               onSubmit={handleSubmit(handleSignIn)}
