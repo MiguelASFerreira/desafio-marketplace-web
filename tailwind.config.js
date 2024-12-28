@@ -51,6 +51,10 @@ export default {
           5: 'hsl(var(--chart-5))',
         },
       },
+      fontFamily: {
+        primary: 'var(--font-primary)',
+        secondary: 'var(--font-secondary)',
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],

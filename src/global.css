@@ -30,6 +30,9 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+
+    --font-primary: "Poppins", sans-serif;
+    --font-secondary: "DM Sans", sans-serif
   }
 
   .dark {
@@ -57,6 +60,11 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
+    --bg-page: 0 47% 97%;
+
+    --font-primary: "Poppins", sans-serif;
+    --font-secondary: "DM Sans", sans-serif
   }
 }
 
@@ -67,5 +75,9 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  html, body {
+    font-family: var(--font-primary);
   }
 }
