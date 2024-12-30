@@ -33,7 +33,7 @@ export function SignIn() {
       <Helmet title="Login" />
       <div className="p-6">
         <div className="w-[562.88px] rounded-[32px] bg-white px-[80px] py-[60.8px]">
-          <div className="pb-[130.88px]">
+          <div className="pb-[80px]">
             <div className="mb-10">
               <h1 className="font-secondary text-2xl font-bold text-[#1D1D1D]">
                 Acesse sua conta
