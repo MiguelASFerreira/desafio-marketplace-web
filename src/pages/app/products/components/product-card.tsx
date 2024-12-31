@@ -14,7 +14,7 @@ export function ProductCard() {
         />
 
         <div className="absolute right-3 top-3 flex gap-1">
-          <div className="bg-blue-dark rounded-full px-2 py-1 text-xs uppercase text-primary-foreground">
+          <div className="rounded-full bg-blue-dark px-2 py-1 text-xs uppercase text-primary-foreground">
             Anunciado
           </div>
 
