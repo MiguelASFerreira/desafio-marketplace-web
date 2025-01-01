@@ -1,10 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 import { AccessIcon, ArrowRight02Icon, Mail02Icon } from 'hugeicons-react'
 import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
+import { signIn } from '@/api/sign-in'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/ui/password-input'
@@ -17,16 +20,27 @@ const signInForm = z.object({
 type SignInForm = z.infer<typeof signInForm>
 
 export function SignIn() {
-  const {
-    register,
-    handleSubmit,
-    formState: { isSubmitting },
-  } = useForm<SignInForm>({
+  const navigate = useNavigate()
+  const { register, handleSubmit } = useForm<SignInForm>({
     resolver: zodResolver(signInForm),
   })
 
-  async function handleSignIn(data: SignInForm) {
-    await new Promise((resolve) => setTimeout(resolve, 5000))
+  const { mutateAsync: authenticate, isPending } = useMutation({
+    mutationFn: signIn,
+  })
+
+  async function handleSignIn({ email, password }: SignInForm) {
+    try {
+      await authenticate({ email, password })
+
+      toast.success('Logado com sucesso!')
+
+      navigate({
+        pathname: '/',
+      })
+    } catch (error) {
+      toast.error('Credenciais Inválidas!')
+    }
   }
   return (
     <>
@@ -65,7 +79,7 @@ export function SignIn() {
                 />
               </div>
 
-              <Button isLoading={isSubmitting} className="w-full" type="submit">
+              <Button isLoading={isPending} className="w-full" type="submit">
                 Acessar
                 <ArrowRight02Icon className="ml-auto" />
               </Button>
