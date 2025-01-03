@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
 import {
   AccessIcon,
   ArrowRight02Icon,
@@ -9,8 +11,11 @@ import {
 import { Helmet } from 'react-helmet-async'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
+import { signUp } from '@/api/sign-up'
+import { uploadFile } from '@/api/upload-file'
 import { Button } from '@/components/ui/button'
 import { Fieldset } from '@/components/ui/fieldset'
 import { FileInput } from '@/components/ui/file-input'
@@ -20,24 +25,27 @@ import { formatPhone } from '@/utils/format-phone'
 
 const signUpForm = z
   .object({
-    name: z.string(),
+    name: z.string().nonempty({ message: 'Nome é obrigatório' }),
     email: z.string().email({
       message: 'E-mail Inválido',
     }),
-    password: z.string(),
-    passwordConfirmed: z.string(),
-    phone: z.string(),
-    file: z.custom<FileList>().refine((files) => {
-      return Array.from(files ?? []).length !== 0
-    }, 'A imagem do perfil é obrigatória'),
+    password: z.string().nonempty({ message: 'Senha é obrigatória' }),
+    passwordConfirmation: z
+      .string()
+      .nonempty({ message: 'Confirmação de senha é obrigatória' }),
+    phone: z.string().nonempty({ message: 'Telefone é obrigatório' }),
+    file: z
+      .instanceof(FileList)
+      .refine((fileList) => fileList?.length === 1, 'Campo obrigatório')
+      .transform((fileList) => fileList.item(0)!),
   })
   .refine(
     (data) => {
-      return data.password === data.passwordConfirmed
+      return data.password === data.passwordConfirmation
     },
     {
       message: 'Senhas não são iguais',
-      path: ['passwordConfirmed'],
+      path: ['passwordConfirmation'],
     },
   )
 
@@ -47,12 +55,44 @@ export function SignUp() {
   const { register, handleSubmit, formState, setValue } = useForm<SignUpForm>({
     resolver: zodResolver(signUpForm),
   })
+  const { errors } = formState
 
-  const { errors, isSubmitting } = formState
+  const { mutateAsync: uploadFileFn } = useMutation({
+    mutationFn: uploadFile,
+    onSuccess: () => {
+      toast.success('Sucesso ao fazer upload da imagem!')
+    },
+    onError: (error: any) => {
+      toast.error(
+        error.response?.data?.message || 'Erro no cadastro do usuário!',
+      )
+    },
+  })
+
+  const { mutateAsync: registerSeller, isPending: isPendingSeller } =
+    useMutation({
+      mutationFn: signUp,
+      onSuccess: () => {
+        toast.success('Sucesso ao cadastrar o usuário!')
+      },
+      onError: (error: any) => {
+        toast.error(
+          error.response?.data?.message || 'Erro no cadastro do usuário!',
+        )
+      },
+    })
 
   async function handleSignUp(data: SignUpForm) {
-    await new Promise((resolve) => setTimeout(resolve, 5000))
-    console.log(data)
+    const { attachments } = await uploadFileFn(data.file)
+
+    await registerSeller({
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      password: data.password,
+      passwordConfirmation: data.passwordConfirmation,
+      avatarId: attachments[0].id,
+    })
   }
 
   function handlePhoneChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -121,13 +161,13 @@ export function SignUp() {
                   label="CONFIRMAR SENHA"
                   placeholder="Sua senha de acesso"
                   LeftIcon={AccessIcon}
-                  error={errors.passwordConfirmed?.message}
-                  {...register('passwordConfirmed')}
+                  error={errors.passwordConfirmation?.message}
+                  {...register('passwordConfirmation')}
                 />
               </Fieldset>
 
               <Button
-                isLoading={isSubmitting}
+                isLoading={isPendingSeller}
                 className="mt-[48px] w-full"
                 type="submit"
               >

@@ -46,7 +46,7 @@ const FileInput = React.forwardRef<HTMLInputElement, Omit<InputProps, 'type'>>(
 
           <input
             type="file"
-            accept="image/png"
+            // accept="image/png"
             className={cn('hidden', className)}
             ref={ref}
             {...props}
@@ -70,7 +70,7 @@ const FileInput = React.forwardRef<HTMLInputElement, Omit<InputProps, 'type'>>(
           )}
         </label>
         {error && (
-          <div className="text-error mt-1 flex gap-1 text-xs">
+          <div className="mt-1 flex gap-1 text-xs text-error">
             <AlertCircleIcon className="h-4 w-4" />
             <span>{error}</span>
           </div>
