@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 import logo from '@/assets/logo.svg'
 
+import { AccountMenu } from './account-menu'
 import { NavLink } from './ui/nav-link'
 
 export function Header() {
@@ -27,11 +28,7 @@ export function Header() {
             Novo produto
           </Link>
 
-          <img
-            src="https://github.com/MiguelASFerreira.png"
-            alt=""
-            className="h-12 w-12 rounded-xl"
-          />
+          <AccountMenu />
         </section>
       </header>
     </div>
