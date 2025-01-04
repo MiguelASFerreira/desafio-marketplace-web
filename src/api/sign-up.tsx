@@ -10,5 +10,5 @@ export interface SignUpBody {
 }
 
 export async function signUp(data: SignUpBody) {
-  await api.post('/sellers', data)
+  return await api.post('/sellers', data)
 }
