@@ -100,11 +100,11 @@ export function FilterProductsForm({ ...props }: FilterProductsFormProps) {
                   disabled={disabled}
                 >
                   <SelectTrigger LeftIcon={SaleTag02Icon}>
-                    <SelectValue placeholder="Status" />
+                    <SelectValue />
                   </SelectTrigger>
 
                   <SelectContent>
-                    <SelectItem value="announced">Anunciado</SelectItem>
+                    <SelectItem value="available">Anunciado</SelectItem>
                     <SelectItem value="sold">Vendido</SelectItem>
                     <SelectItem value="cancelled">Cancelado</SelectItem>
                   </SelectContent>
