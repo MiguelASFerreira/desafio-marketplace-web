@@ -48,7 +48,7 @@ export function AccountMenu() {
           {isLoadingProfile ? (
             <Skeleton className="h-12 w-12 rounded-xl" />
           ) : (
-            <AvatarImage src={profile?.seller.avatar.url} />
+            <AvatarImage src={profile?.seller.avatar?.url} />
           )}
         </Avatar>
       </DropdownMenuTrigger>

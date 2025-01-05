@@ -1,44 +1,54 @@
+import { Link } from 'react-router-dom'
+
+import { Product } from '@/api/get-products'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { ProductStatusTag } from '@/components/ui/status-tag'
 
-export function ProductCard() {
+interface ProductCardProps {
+  product: Product
+}
+
+export function ProductCard({ product }: ProductCardProps) {
   return (
-    <Card
-      role="button"
-      className="hover:border-blue-base h-[250px] w-[320px] cursor-pointer border border-transparent transition-all"
-    >
-      <CardHeader className="relative p-1 pb-0">
-        <img
-          className="h-[144px] w-[323px] rounded-[20px]"
-          src="https://images.unsplash.com/photo-1512212621149-107ffe572d2f?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt=""
-        />
+    <Link to={`/products/${product.id}/edit`}>
+      <Card
+        role="button"
+        className="hover:border-blue-base h-[250px] w-[320px] cursor-pointer border border-transparent transition-all"
+      >
+        <CardHeader className="relative p-1 pb-0">
+          <img
+            className="h-[144px] w-[323px] rounded-[20px]"
+            src={product.attachments[0].url}
+            alt=""
+          />
 
-        <div className="absolute right-3 top-3 flex gap-1">
-          <div className="rounded-full bg-blue-dark px-2 py-1 text-xs uppercase text-primary-foreground">
-            Anunciado
+          <div className="absolute right-3 top-3 flex gap-1">
+            <ProductStatusTag status={product.status} />
+
+            <div className="rounded-full bg-gray-400 px-2 py-1 text-xs uppercase text-primary-foreground">
+              {product.category.title}
+            </div>
+          </div>
+        </CardHeader>
+
+        <CardContent className="flex flex-col gap-2 p-4 pb-5">
+          <div className="flex justify-between text-[#1D1D1D]">
+            <h3 className="line-clamp-1 font-semibold">{product.title}</h3>
+
+            <p className="font-secondary text-lg font-bold text-[#1D1D1D]">
+              <span className="font-primary text-xs font-medium">R$</span>
+              {(product.priceInCents / 100).toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </p>
           </div>
 
-          <div className="rounded-full bg-gray-400 px-2 py-1 text-xs uppercase text-primary-foreground">
-            Móvel
-          </div>
-        </div>
-      </CardHeader>
-
-      <CardContent className="flex flex-col gap-2 p-4 pb-5">
-        <div className="flex justify-between text-[#1D1D1D]">
-          <h3 className="font-semibold">Sofá</h3>
-
-          <p className="font-secondary text-lg font-bold text-[#1D1D1D]">
-            <span className="font-primary text-xs font-medium">R$</span>
-            1.200,90
+          <p className="line-clamp-2 text-sm text-[#666666]">
+            {product.description}
           </p>
-        </div>
-
-        <p className="line-clamp-2 text-sm text-[#666666]">
-          Sofá revestido em couro legítimo, com estrutura em madeira maciça e
-          pés em metal cromado.
-        </p>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </Link>
   )
 }

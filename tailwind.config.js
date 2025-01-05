@@ -53,6 +53,7 @@ export default {
         error: '#DC3545',
         'blue-light': '#D7EFF9',
         'blue-dark': '#0095E5',
+        success: '#28A745',
       },
       fontFamily: {
         primary: 'var(--font-primary)',
