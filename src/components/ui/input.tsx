@@ -2,6 +2,7 @@ import { AlertCircleIcon, HugeiconsProps } from 'hugeicons-react'
 import * as React from 'react'
 
 import { cn } from '@/lib/utils'
+import { formatMoney } from '@/utils/format-money'
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -9,10 +10,18 @@ export interface InputProps
   label?: string
   LeftIcon?: React.ComponentType<HugeiconsProps>
   RightIcon?: React.ComponentType<HugeiconsProps>
+  format?: 'money'
+}
+
+const formatters = {
+  money: formatMoney,
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, error, type, label, LeftIcon, RightIcon, ...props }, ref) => {
+  (
+    { className, error, format, type, label, LeftIcon, RightIcon, ...props },
+    ref,
+  ) => {
     return (
       <label
         className={cn(
@@ -38,6 +47,19 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               )}
               ref={ref}
               {...props}
+              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                setTimeout(() => {
+                  if (format) {
+                    const target = e.target as HTMLInputElement
+
+                    target.value = formatters[format](target.value)
+                  }
+
+                  if (props.onKeyDown) {
+                    props.onKeyDown(e)
+                  }
+                }, 1)
+              }}
             />
 
             {RightIcon && <RightIcon className="h-6 w-6" />}
@@ -45,7 +67,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         </div>
 
         {error && (
-          <div className="text-error mt-1 flex gap-1 text-xs">
+          <div className="mt-1 flex gap-1 text-xs text-error">
             <AlertCircleIcon className="h-4 w-4" />
             <span>{error}</span>
           </div>

@@ -1,4 +1,4 @@
-import { ImageUploadIcon } from 'hugeicons-react'
+import { AlertCircleIcon, ImageUploadIcon } from 'hugeicons-react'
 import React, { useState } from 'react'
 
 import { cn } from '@/lib/utils'
@@ -6,11 +6,15 @@ import { cn } from '@/lib/utils'
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string
+  error?: string
   containerProps?: React.LabelHTMLAttributes<HTMLLabelElement>
 }
 
 const FileInput = React.forwardRef<HTMLInputElement, Omit<InputProps, 'type'>>(
-  ({ className, label, containerProps, defaultValue, ...props }, ref) => {
+  (
+    { className, error, label, containerProps, defaultValue, ...props },
+    ref,
+  ) => {
     const [image, setImage] = useState<string | undefined>(String(defaultValue))
 
     function handleChooseImage(event: React.ChangeEvent<HTMLInputElement>) {
@@ -24,40 +28,48 @@ const FileInput = React.forwardRef<HTMLInputElement, Omit<InputProps, 'type'>>(
     }
 
     return (
-      <label
-        title={props.title}
-        {...containerProps}
-        className={cn(
-          'bg-shape relative flex h-32 w-32 cursor-pointer flex-col items-center justify-center gap-4 rounded-xl',
-          containerProps?.className,
-        )}
-      >
-        <ImageUploadIcon className="h-8 w-8 text-primary" />
+      <>
+        <label
+          title={props.title}
+          {...containerProps}
+          className={cn(
+            'relative flex h-32 w-32 cursor-pointer flex-col items-center justify-center gap-4 rounded-xl bg-[#F5EAEA]',
+            containerProps?.className,
+          )}
+        >
+          <ImageUploadIcon className="h-8 w-8 text-primary" />
 
-        {label && <span className="text-center text-sm">{label}</span>}
+          {label && <span className="text-center text-sm">{label}</span>}
 
-        <input
-          type="file"
-          className={cn('hidden', className)}
-          ref={ref}
-          {...props}
-          onChange={(e) => {
-            handleChooseImage(e)
+          <input
+            type="file"
+            className={cn('hidden', className)}
+            ref={ref}
+            {...props}
+            onChange={(e) => {
+              handleChooseImage(e)
 
-            if (props.onChange) {
-              props.onChange(e)
-            }
-          }}
-        />
-
-        {image && (
-          <img
-            src={image}
-            alt=""
-            className="absolute h-full w-full rounded-xl object-cover"
+              if (props.onChange) {
+                props.onChange(e)
+              }
+            }}
           />
+
+          {image && (
+            <img
+              src={image}
+              alt=""
+              className="absolute h-full w-full rounded-xl object-cover"
+            />
+          )}
+        </label>
+        {error && (
+          <div className="mt-1 flex gap-1 text-xs text-error">
+            <AlertCircleIcon className="h-4 w-4" />
+            <span>{error}</span>
+          </div>
         )}
-      </label>
+      </>
     )
   },
 )
