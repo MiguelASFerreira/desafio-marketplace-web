@@ -164,6 +164,10 @@ export function ProductsEdit() {
         status,
       })
     }
+
+    navigate('/products', {
+      replace: true,
+    })
   }
 
   async function handleEditProduct({
@@ -194,8 +198,8 @@ export function ProductsEdit() {
 
     updateProductsOnCache(updatedProduct)
 
-    navigate({
-      pathname: '/products',
+    navigate('/products', {
+      replace: true,
     })
   }
 
@@ -283,7 +287,9 @@ export function ProductsEdit() {
               <Button
                 variant="ghost"
                 className="h-fit p-0"
-                onClick={() => handleUpdateProductStatus('sold')}
+                onClick={() => {
+                  handleUpdateProductStatus('sold')
+                }}
                 disabled={
                   product?.status === 'sold' || product?.status === 'cancelled'
                 }
