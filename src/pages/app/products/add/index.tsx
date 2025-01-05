@@ -64,16 +64,16 @@ export function ProductsAdd() {
           </span>
         </div>
 
-        <div className="mt-10 grid grid-cols-3 gap-24">
+        <div className="mt-5 grid grid-cols-3 gap-24">
           <FileInput
             containerProps={{
-              className: 'h-auto max-h-[340px] w-[415px] col-span-1',
+              className: 'h-auto max-h-[340px] w-[350px] col-span-1',
             }}
             label="Selecione a imagem do produto"
             form="add-product-form"
             {...register('file')}
           />
-          <Card className="col-span-2 p-8">
+          <Card className="col-span-2 p-6">
             <CardHeader className="p-0">
               <h2 className="font-secondary text-lg">Dados do produto</h2>
             </CardHeader>
