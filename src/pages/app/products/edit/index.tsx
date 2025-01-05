@@ -1,6 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { ArrowLeft02Icon, Tick02Icon, UnavailableIcon } from 'hugeicons-react'
+import {
+  ArrowLeft02Icon,
+  CreativeMarketIcon,
+  Tick02Icon,
+  UnavailableIcon,
+} from 'hugeicons-react'
 import { Helmet } from 'react-helmet-async'
 import { Controller, useForm } from 'react-hook-form'
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -203,6 +208,9 @@ export function ProductsEdit() {
     })
   }
 
+  const soldOrCancelled =
+    product?.status === 'sold' || product?.status === 'cancelled'
+
   if (isLoading && !product) {
     return (
       <div className="flex flex-col">
@@ -273,7 +281,7 @@ export function ProductsEdit() {
             <ArrowLeft02Icon /> Voltar
           </Link>
 
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-2">
             <div>
               <h1 className="mt-2 font-primary text-2xl font-bold text-[#1D1D1D]">
                 Editar Produto
@@ -290,23 +298,28 @@ export function ProductsEdit() {
                 onClick={() => {
                   handleUpdateProductStatus('sold')
                 }}
-                disabled={
-                  product?.status === 'sold' || product?.status === 'cancelled'
-                }
+                disabled={soldOrCancelled}
               >
-                <Tick02Icon className="mr-2 h-5 w-5" />
+                <Tick02Icon className="h-5 w-5" />
                 Marcar como vendido
               </Button>
               <Button
                 variant="ghost"
                 className="h-fit p-0"
                 onClick={() => handleUpdateProductStatus('cancelled')}
-                disabled={
-                  product?.status === 'sold' || product?.status === 'cancelled'
-                }
+                disabled={soldOrCancelled}
               >
-                <UnavailableIcon className="mr-2 h-5 w-5" />
+                <UnavailableIcon className="h-5 w-5" />
                 Desativar anúncio
+              </Button>
+              <Button
+                variant="ghost"
+                className="h-fit p-0"
+                onClick={() => handleUpdateProductStatus('available')}
+                disabled={product?.status === 'available'}
+              >
+                <CreativeMarketIcon className="h-5 w-5" />
+                Ativar anúncio
               </Button>
             </div>
           </div>
@@ -341,12 +354,14 @@ export function ProductsEdit() {
                     {...register('title')}
                     error={errors.title?.message}
                     placeholder="Nome do produto"
+                    disabled={soldOrCancelled}
                   />
                   <Input
                     label="Valor"
                     {...register('priceInCents')}
                     placeholder="R$ 0,00"
                     error={errors.priceInCents?.message}
+                    disabled={soldOrCancelled}
                   />
                 </div>
                 <Textarea
@@ -354,12 +369,13 @@ export function ProductsEdit() {
                   placeholder="Escreva detalhes sobre o produto, tamanho, características"
                   {...register('description')}
                   error={errors.description?.message}
+                  disabled={soldOrCancelled}
                 />
                 <Controller
                   name="categoryId"
                   control={control}
                   render={({
-                    field: { name, onChange, value, disabled },
+                    field: { name, onChange, value },
                     fieldState: { error },
                   }) => {
                     return (
@@ -368,7 +384,7 @@ export function ProductsEdit() {
                         name={name}
                         onValueChange={onChange}
                         value={value}
-                        disabled={disabled}
+                        disabled={soldOrCancelled}
                         error={error?.message}
                       >
                         <SelectTrigger>
@@ -395,6 +411,7 @@ export function ProductsEdit() {
                   </Link>
                   <Button
                     isLoading={isSubmitting}
+                    disabled={soldOrCancelled}
                     type="submit"
                     className="w-full"
                   >
